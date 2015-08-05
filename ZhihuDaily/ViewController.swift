@@ -13,25 +13,14 @@ class DailyViewController: UITableViewController {
     
     var latestNews: News?
     
+    var contentViewController = NewsContentViewController()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.registerNib(UINib(nibName: "NewsCell", bundle: nil), forCellReuseIdentifier: NewsCell.reuseIdentifier)
         
         tableView.rowHeight = 70
-        
-        showLauchImage()
-        
-        loadData()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
-    
-    func loadData() {
         
         let url_string = "http://news-at.zhihu.com/api/4/news/latest"
         
@@ -43,67 +32,14 @@ class DailyViewController: UITableViewController {
             }
             
         }
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
         
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
-    func showLauchImage() {
-        let url_string = "http://news-at.zhihu.com/api/4/start-image/720*1184"
         
-        Alamofire.request(.GET, url_string).responseJSON { (_, _, result) -> Void in
-            if let obj = result.value {
-                let dict = obj as! NSDictionary
-                
-                let height = UIScreen.mainScreen().bounds.size.height
-                let width = UIScreen.mainScreen().bounds.size.width
-                let img = UIImageView(frame:CGRectMake(0, 0, width, height))
-                img.backgroundColor = UIColor.blackColor()
-                img.contentMode = UIViewContentMode.ScaleAspectFit
-                
-                let window = UIApplication.sharedApplication().keyWindow
-                window!.addSubview(img)
-
-                let image_url_string = dict["img"] as! String
-                Alamofire.request(.GET, image_url_string).response(completionHandler: { (_, _, data, _) -> Void in
-                    if let image_data = data {
-                        img.image = UIImage(data: image_data)
-                    }
-                })
-                
-                let lbl = UILabel(frame:CGRectMake(0,height-50,width,20))
-                lbl.backgroundColor = UIColor.clearColor()
-                lbl.text = dict["text"] as? String
-                lbl.textColor = UIColor.grayColor()
-                lbl.textAlignment = NSTextAlignment.Center
-                lbl.font = UIFont.systemFontOfSize(14)
-                window!.addSubview(lbl)
-                
-                UIView.animateWithDuration(3,animations:{
-                    let height = UIScreen.mainScreen().bounds.size.height
-                    let rect = CGRectMake(-100,-100,width+200,height+200)
-                    img.frame = rect
-                    },completion:{
-                        (Bool completion) in
-                        
-                        if completion {
-                            UIView.animateWithDuration(1,animations:{
-                                img.alpha = 0
-                                lbl.alpha = 0
-                                },completion:{
-                                    (Bool completion) in
-                                    
-                                    if completion {
-                                        img.removeFromSuperview()
-                                        lbl.removeFromSuperview()
-                                    }
-                            })
-                        }
-                })
-                
-            }
- 
-        }
-    }
-    
     // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -162,7 +98,9 @@ class DailyViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // 点击cell跳转到日报内容页面
-        
+        contentViewController.news_id = latestNews?.stories[indexPath.row].id
+        contentViewController.loadData()
+        self.navigationController?.pushViewController(contentViewController, animated: true)
     }
     
     /*

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+
+        showLauchImage()
+        
         return true
     }
 
@@ -39,6 +42,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+
+    func showLauchImage() {
+        let url_string = "http://news-at.zhihu.com/api/5/start-image/720*1184"
+        
+        Alamofire.request(.GET, url_string).responseJSON { (_, _, result) -> Void in
+            if let obj = result.value {
+                let dict = obj as! NSDictionary
+                
+                let screen_size = UIScreen.mainScreen().bounds.size
+                
+                let img = UIImageView(frame:CGRectMake(0, 0, screen_size.width, screen_size.height))
+                img.backgroundColor = UIColor.blackColor()
+                img.contentMode = .ScaleAspectFit
+                
+                let window = UIApplication.sharedApplication().keyWindow
+                window!.addSubview(img)
+                
+                let image_url_string = dict["img"] as! String
+                Alamofire.request(.GET, image_url_string).response(completionHandler: { (_, _, data, _) -> Void in
+                    if let image_data = data {
+                        img.image = UIImage(data: image_data)
+                    }
+                })
+                
+                let lbl = UILabel(frame:CGRectMake(0, screen_size.height-50, screen_size.width, 20))
+                lbl.backgroundColor = UIColor.clearColor()
+                lbl.text = dict["text"] as? String
+                lbl.textColor = UIColor.grayColor()
+                lbl.textAlignment = NSTextAlignment.Center
+                lbl.font = UIFont.systemFontOfSize(14)
+                window!.addSubview(lbl)
+                
+                UIView.animateWithDuration(3,animations:{
+                    let height = UIScreen.mainScreen().bounds.size.height
+                    let rect = CGRectMake(-100,-100, screen_size.width+200, height+200)
+                    img.frame = rect
+                    },completion:{
+                        (Bool completion) in
+                        
+                        if completion {
+                            UIView.animateWithDuration(1,animations:{
+                                img.alpha = 0
+                                lbl.alpha = 0
+                                },completion:{
+                                    (Bool completion) in
+                                    
+                                    if completion {
+                                        img.removeFromSuperview()
+                                        lbl.removeFromSuperview()
+                                    }
+                            })
+                        }
+                })
+                
+            }
+            
+        }
     }
 
 

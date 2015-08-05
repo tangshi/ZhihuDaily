@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8135.1"/>
     </dependencies>
     <scenes>
-        <!--知乎日报-->
+        <!--今日热闻-->
         <scene sceneID="aaa-Oe-7rI">
             <objects>
-                <tableViewController id="hkX-KS-wd8" customClass="DailyViewController" customModule="知乎日报" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="今日热闻" id="hkX-KS-wd8" customClass="DailyViewController" customModule="ZhihuDaily" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cmU-VO-f5n">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -18,12 +18,12 @@
                         </connections>
                     </tableView>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="知乎日报" id="BAT-ep-ooT"/>
+                    <navigationItem key="navigationItem" id="BAT-ep-ooT"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7RE-d5-KT5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1059" y="1049"/>
+            <point key="canvasLocation" x="825" y="669"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="bmR-Ld-Xmu">
@@ -46,7 +46,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LRc-UQ-bJv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="256" y="1049"/>
+            <point key="canvasLocation" x="114" y="669"/>
         </scene>
     </scenes>
 </document>
